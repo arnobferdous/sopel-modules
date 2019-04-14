@@ -11,7 +11,8 @@ greeting = 'Greetings!'
 
 
 def setup(bot):
-    bot.memory['greetings'] = SopelMemory()
+    if 'greetings' not in bot.memory:
+        bot.memory['greetings'] = SopelMemory()
 
 
 @event('JOIN')
