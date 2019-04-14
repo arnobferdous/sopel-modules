@@ -28,25 +28,21 @@ def main_func(bot, trigger):
     result = []
     services = {}
 
-    for service in json['services']:
-    	if service in service_translations:
-    		name = service_translations[service]
-    		services[name] = {}
-    		services[name]['status'] = json['services'][service]['status']
-    		services[name]['title'] = json['services'][service]['title']
+    for name, details in json['services'].items():
+    	if name in service_translations:
+            name = service_translations[name]
+            status = details['status']
+            title = details['title']
 
+            if status == 'good':
+                status = formatting.color(title, "GREEN")
+            else:
+                status = formatting.color(title, "RED")
 
-    for name, info in services.items():
-    	if info['status'] == "good":
-    		info_string = formatting.color(info['title'], "GREEN")
-    	else:
-    		info_string = formatting.color(info['title'], "RED")
-    	i = "{0:<30} {1:>30}".format(name, info_string)
-    	result.append(i)
+            i = "{0:<30} {1:>30}".format(name, status)
+            result.append(i)
 
-    result.sort()
-
-    for line in result:
+    for line in result.sort():
     	bot.say(line)
 
 def get_info():
