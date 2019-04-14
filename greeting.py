@@ -1,4 +1,4 @@
-from sopel.config.types import StaticSection, ChoiceAttribute, ValidatedAttribute
+from sopel.config.types import StaticSection, ValidatedAttribute, ListAttribute    
 from sopel.module import rule, event, interval
 from sopel.tools import SopelMemory
 from sopel.logger import get_logger
@@ -9,7 +9,7 @@ timeout = greeting = logger = None
 class GreetingSection(StaticSection):
     timeout   = ValidatedAttribute('timeout', int)
     greeting  = ValidatedAttribute('greeting')
-    blacklist = ValidatedAttribute('blacklist')
+    blacklist = ListAttribute('blacklist')
 
 
 def configure(config):
@@ -30,8 +30,6 @@ def setup(bot):
     blacklist = bot.config.greeting.blacklist
     logger    = get_logger(__name__)
 
-    if blacklist is None:
-        blacklist = {}
 
     if 'greeting' not in bot.memory:
         bot.memory['greeting'] = SopelMemory()
@@ -45,7 +43,7 @@ def joined(bot, trigger):
     logger.info(trigger.nick + ' joined')
 
     if trigger.sender in blacklist:
-        logger.info('Ignoring blacklisted channel')
+        logger.info('Ignoring blacklisted channel ' + trigger.sender)
         return
     elif bot.nick == trigger.nick:
         logger.info('Skipping self')
