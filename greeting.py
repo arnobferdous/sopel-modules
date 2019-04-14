@@ -95,6 +95,6 @@ def cleanup_interval(bot):
 
     for key, val in bot.memory['greeting'].items():
         if ctime - val > timeout:
-            logger.info('Removing entry for ' + key)
+            logger.info('Removing entry for ' + str(key))
 
             del bot.memory['greeting'][key]
