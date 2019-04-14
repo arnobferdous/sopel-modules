@@ -9,7 +9,7 @@ timeout = greeting = logger = None
 class GreetingSection(StaticSection):
     timeout   = ValidatedAttribute('timeout', int)
     greeting  = ValidatedAttribute('greeting')
-    blacklist = ListAttribute('blacklist')
+    whitelist = ListAttribute('whitelist')
 
 
 def configure(config):
@@ -17,17 +17,17 @@ def configure(config):
 
     config.greeting.configure_setting('timeout', 'How long after a user joins to listen and respond with the greeting (in seconds)')
     config.greeting.configure_setting('greeting', 'Greeting to use')
-    config.greeting.configure_setting('blacklist', 'List of channels not to greet in')
+    config.greeting.configure_setting('whitelist', 'List of channels to greet in')
 
 
 def setup(bot):
-    global timeout, greeting, blacklist, logger
+    global timeout, greeting, whitelist, logger
 
     bot.config.define_section('greeting', GreetingSection)
 
     timeout   = bot.config.greeting.timeout
     greeting  = bot.config.greeting.greeting
-    blacklist = bot.config.greeting.blacklist
+    whitelist = bot.config.greeting.whitelist
     logger    = get_logger(__name__)
 
 
@@ -38,12 +38,12 @@ def setup(bot):
 @event('JOIN')
 @rule('.*')
 def joined(bot, trigger):
-    global blacklist
+    global whitelist
 
     logger.info(trigger.nick + ' joined')
 
-    if trigger.sender in blacklist:
-        logger.info('Ignoring blacklisted channel ' + trigger.sender)
+    if trigger.sender not in whitelist:
+        logger.info('Ignoring channel ' + trigger.sender)
         return
     elif bot.nick == trigger.nick:
         logger.info('Skipping self')
@@ -59,10 +59,10 @@ def joined(bot, trigger):
 
 @rule('.*')
 def speak(bot, trigger):
-    global timeout, greeting, blacklist
+    global timeout, greeting, whitelist
 
-    if trigger.sender in blacklist:
-        logger.info('Ignoring blacklisted channel')
+    if trigger.sender not in whitelist:
+        logger.info('Ignoring channel ' + trigger.sender)
         return
 
     ctime = time.time()
