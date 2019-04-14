@@ -28,21 +28,24 @@ def main_func(bot, trigger):
     result = []
     services = {}
 
-    online_status = json['online']
     for service in json['services']:
     	if service in service_translations:
     		name = service_translations[service]
     		services[name] = {}
     		services[name]['status'] = json['services'][service]['status']
     		services[name]['title'] = json['services'][service]['title']
-    for name,info in services.items():
+
+
+    for name, info in services.items():
     	if info['status'] == "good":
     		info_string = formatting.color(info['title'], "GREEN")
     	else:
     		info_string = formatting.color(info['title'], "RED")
     	i = "{0:<30} {1:>30}".format(name, info_string)
     	result.append(i)
+
     result.sort()
+
     for line in result:
     	bot.say(line)
 
