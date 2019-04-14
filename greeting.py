@@ -4,7 +4,6 @@ from sopel.tools import SopelMemory
 from sopel.logger import get_logger
 import time
 
-timeout = greeting = logger = None
 
 class GreetingSection(StaticSection):
     timeout   = ValidatedAttribute('timeout', int)
