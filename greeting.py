@@ -30,6 +30,9 @@ def setup(bot):
     blacklist = bot.config.greeting.blacklist
     logger    = get_logger(__name__)
 
+    if blacklist is None:
+        blacklist = {}
+
     if 'greeting' not in bot.memory:
         bot.memory['greeting'] = SopelMemory()
 
