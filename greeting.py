@@ -4,6 +4,9 @@ from sopel.tools import SopelMemory
 import time
 
 
+timeout = greeting = None
+
+
 class GreetingSection(StaticSection):
     timeout  = ValidatedAttribute('timeout', int)
     greeting = ValidatedAttribute('greeting')
@@ -17,7 +20,12 @@ def configure(config):
 
 
 def setup(bot):
+    global timeout, greeting
+
     bot.config.define_section('greeting', GreetingSection)
+
+    timeout = bot.config.greeting.timeout
+    greeting = bot.config.greeting.greeting
 
     if 'greeting' not in bot.memory:
         bot.memory['greeting'] = SopelMemory()
@@ -37,6 +45,7 @@ def joined(bot, trigger):
 
 @rule('.*')
 def speak(bot, trigger):
+    global timeout, greeting
     uid = bot.db.get_nick_id(trigger.nick, create=True)
     ctime = time.time()
 
@@ -58,9 +67,10 @@ def cleanup_events(bot, trigger):
     if uid in bot.memory['greeting']:
         del bot.memory['greeting'][uid]
 
-cleanup = 90
-@interval(cleanup)
+
+@interval(90)
 def cleanup_interval(bot):
+    global timeout
     ctime = time.time()
 
     for key, val in bot.memory['greeting'].items():
