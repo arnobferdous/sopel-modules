@@ -1,18 +1,26 @@
+from sopel.config.types import StaticSection, ChoiceAttribute, ValidatedAttribute
 from sopel.module import rule, event, interval
 from sopel.tools import SopelMemory
 import time
 
 
-# in seconds
-ttl = 90
-cleanup = 1800
+class GreetingSection(StaticSection):
+    timeout  = ValidatedAttribute('timeout', int)
+    greeting = ValidatedAttribute('greeting')
 
-greeting = 'Greetings!'
+
+def configure(config):
+    config.define_section('greeting', GreetingSection, validate=False)
+
+    config.greeting.configure_setting('timeout', 'How long after a user joins to listen and respond with the greeting (in seconds)')
+    config.greeting.configure_setting('greeting', 'Greeting to use')
 
 
 def setup(bot):
-    if 'greetings' not in bot.memory:
-        bot.memory['greetings'] = SopelMemory()
+    bot.config.define_section('greeting', GreetingSection)
+
+    if 'greeting' not in bot.memory:
+        bot.memory['greeting'] = SopelMemory()
 
 
 @event('JOIN')
@@ -24,7 +32,7 @@ def joined(bot, trigger):
         uid = bot.db.get_nick_id(trigger.nick, create=True)
         jtime = time.time()
 
-        bot.memory['greetings'][uid] = jtime
+        bot.memory['greeting'][uid] = jtime
 
 
 @rule('.*')
@@ -32,13 +40,13 @@ def speak(bot, trigger):
     uid = bot.db.get_nick_id(trigger.nick, create=True)
     ctime = time.time()
 
-    if uid in bot.memory['greetings']:
-        jtime = bot.memory['greetings'][uid]
+    if uid in bot.memory['greeting']:
+        jtime = bot.memory['greeting'][uid]
 
-        if ctime - jtime <= ttl:
+        if ctime - jtime <= timeout:
             bot.say(greeting)
 
-        del bot.memory['greetings'][uid]
+        del bot.memory['greeting'][uid]
 
 
 @event('PART')
@@ -47,14 +55,14 @@ def speak(bot, trigger):
 def cleanup_events(bot, trigger):
     uid = bot.db.get_nick_id(trigger.nick, create=True)
 
-    if uid in bot.memory['greetings']:
-        del bot.memory['greetings'][uid]
+    if uid in bot.memory['greeting']:
+        del bot.memory['greeting'][uid]
 
-
+cleanup = 90
 @interval(cleanup)
 def cleanup_interval(bot):
     ctime = time.time()
 
-    for key, val in bot.memory['greetings'].items():
-        if ctime - val > ttl:
-            del bot.memory['greetings'][key]
+    for key, val in bot.memory['greeting'].items():
+        if ctime - val > timeout:
+            del bot.memory['greeting'][key]
