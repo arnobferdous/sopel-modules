@@ -17,12 +17,12 @@ def setup(bot):
 @event('JOIN')
 @rule('.*')
 def joined(bot, trigger):
-    uid = bot.db.get_nick_id(trigger.nick, create=True)
-    jtime = time.time()
-
     if bot.nick == trigger.nick:
         return
     else:
+        uid = bot.db.get_nick_id(trigger.nick, create=True)
+        jtime = time.time()
+
         bot.memory['greetings'][uid] = jtime
 
 
