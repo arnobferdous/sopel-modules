@@ -11,6 +11,3 @@ This module retrieves steamstat.us info and [presents it nicely](https://imgur.c
 
 ## faq.py ##
 A *very* simple FAQ module 
-
-TODO 
-* Figure out a way of storing the questions/answers outside of the source file
