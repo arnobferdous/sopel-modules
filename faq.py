@@ -4,7 +4,7 @@ import json, os
 
 
 class FaqSection(StaticSection):
-    path  = ValidatedAttribute('path')
+    path = ValidatedAttribute('path')
 
 
 def configure(config):
@@ -18,13 +18,12 @@ def setup(bot):
 
     bot.config.define_section('faq', FaqSection)
 
-    path    = bot.config.faq.path
-
-    answers = json.load(open(path))
-
 
 @commands("faq")
 def faq(bot, trigger):
+    path     = bot.config.faq.path
+    answers  = json.load(open(path))
+
     question = trigger.match.group(2)
 
     if question in answers:
