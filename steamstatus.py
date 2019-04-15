@@ -1,26 +1,7 @@
 from sopel.config.types import StaticSection, ListAttribute
 from sopel.module import commands
 from sopel import formatting
-import requests, string
-
-service_translations = {
-	'cms': 'Steam CMs',
-	'cms-ws': 'Steam WebSocket CMs',
-	'community': 'Steam Community',
-	'csgo': 'CS:GO Services',
-	'csgo_community': 'CS:GO Player Inventories',
-	'csgo_mm_scheduler': 'CS:GO Matchmaking Scheduler',
-	'csgo_sessions': 'CS:GO Sessions Logon',
-	'database': 'SteamDB Database',
-	'dota2': 'DoTA 2 Services',
-	'graphs': 'SteamDB Graphs',
-	'online': 'Players Online',
-	'realtime': 'SteamDB Realtime Stream',
-	'steam': 'Steam',
-	'store': 'Steam Store',
-	'tf2': 'TF2 Services',
-	'webapi': 'Steam Web API'
-}
+import requests, string, os, json
 
 
 class SteamStatusSection(StaticSection):
@@ -34,16 +15,18 @@ def configure(config):
 
 
 def setup(bot):
-    global blacklist
+    global blacklist, service_translations
 
     bot.config.define_section('steamstatus', SteamStatusSection)
 
     blacklist = bot.config.steamstatus.blacklist
 
+    service_translations = json.load(open(os.path.dirname(os.path.realpath(__file__)) + '/data/steamstatus'))
+
 
 @commands("steam")
 def status(bot, trigger):
-    global blacklist
+    global blacklist, service_translations
 
     json = get_info()
     result = []

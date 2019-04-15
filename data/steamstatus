@@ -1,0 +1,18 @@
+{
+	"cms": "Steam CMs",
+	"cms-ws": "Steam WebSocket CMs",
+	"community": "Steam Community",
+	"csgo": "CS:GO Services",
+	"csgo_community": "CS:GO Player Inventories",
+	"csgo_mm_scheduler": "CS:GO Matchmaking Scheduler",
+	"csgo_sessions": "CS:GO Sessions Logon",
+	"database": "SteamDB Database",
+	"dota2": "DoTA 2 Services",
+	"graphs": "SteamDB Graphs",
+	"online": "Players Online",
+	"realtime": "SteamDB Realtime Stream",
+	"steam": "Steam",
+	"store": "Steam Store",
+	"tf2": "TF2 Services",
+	"webapi": "Steam Web API"
+}
