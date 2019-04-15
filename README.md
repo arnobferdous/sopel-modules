@@ -8,6 +8,8 @@ TODO
 ## steamstatus.py ##
 This module retrieves steamstat.us info and [presents it nicely](https://imgur.com/a/TKnsRLM)
 
+TODO
+* Add cache, with configurable TTL
 
 ## faq.py ##
 A *very* simple FAQ module 
