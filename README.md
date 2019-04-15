@@ -1,5 +1,5 @@
 ## greeting.py ##
-This module greets users with a preset message when they speak within X seconds of joining a channel Sopel is in, or when someone uses the `greet` command
+This module greets users with a preset message when they speak within X seconds of joining a channel in the whitelist, or when someone uses the `greet` command
 
 TODO
 * Fix nick tracking (joining, changing nick, then speaking within timeout does not trigger greeting)
