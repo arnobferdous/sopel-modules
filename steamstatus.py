@@ -1,11 +1,13 @@
-from sopel.config.types import StaticSection, ListAttribute
+from sopel.config.types import StaticSection, ListAttribute, ValidatedAttribute
 from sopel.module import commands
 from sopel import formatting
 import requests, string, os, json
 
 
 class SteamStatusSection(StaticSection):
-    blacklist = ListAttribute('blacklist')
+    blacklist  = ListAttribute('blacklist')
+    url        = ValidatedAttribute('url', default='https://crowbar.steamstat.us/Barney')
+    user_agent = ValidatedAttribute('user_agent', default='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0')
 
 
 def configure(config):
@@ -15,12 +17,13 @@ def configure(config):
 
 
 def setup(bot):
-    global blacklist, service_translations
+    global blacklist, service_translations, url, user_agent
 
     bot.config.define_section('steamstatus', SteamStatusSection)
 
-    blacklist = bot.config.steamstatus.blacklist
-
+    blacklist            = bot.config.steamstatus.blacklist
+    url                  = bot.config.steamstatus.url
+    user_agent           = bot.config.steamstatus.user_agent
     service_translations = json.load(open(os.path.dirname(os.path.realpath(__file__)) + '/data/steamstatus'))
 
 
@@ -28,13 +31,12 @@ def setup(bot):
 def status(bot, trigger):
     json = get_info()
     result = []
-    services = {}
 
     for name, details in json['services'].items():
         if name not in blacklist and name in service_translations:
-            name = service_translations[name]
+            name   = service_translations[name]
             status = details['status']
-            title = details['title']
+            title  = details['title']
 
             if status == 'good':
                 status = formatting.color(title, "GREEN")
@@ -51,6 +53,6 @@ def status(bot, trigger):
 
 
 def get_info():
-    response = requests.get('https://crowbar.steamstat.us/Barney', headers={'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0'})
+    response = requests.get(url, headers={'user-agent': user_agent})
 
     return response.json()
