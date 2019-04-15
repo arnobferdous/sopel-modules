@@ -1,6 +1,9 @@
 ## greeting.py ##
 This module greets users with a preset message when they speak within X seconds of joining a channel Sopel is in
 
+TODO
+* Fix nick tracking (joining, changing nick, then speaking within timeout does not trigger greeting)
+
 
 ## steamstatus.py ##
 This module retrieves steamstat.us info and [presents it nicely](https://imgur.com/a/TKnsRLM)
