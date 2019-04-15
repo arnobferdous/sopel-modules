@@ -35,13 +35,25 @@ def setup(bot):
 
 @commands('greet')
 def greet(bot, trigger):
-    global greeting
+    global whitelist
+
+    if trigger.sender not in whitelist:
+        logger.info('Ignoring channel ' + trigger.sender)
+        return
 
     if trigger.match.group(3) is not None:
         nick = trigger.match.group(3)
-        bot.say(nick + ': ' + greeting)
-    else:
-        bot.say(greeting)
+
+    send_greeting(bot, nick)
+
+
+def send_greeting(bot, target=None):
+    global greeting
+
+    if target is not None:
+        nick = target + ': '
+
+    bot.say(nick + greeting)
 
 
 @event('JOIN')
@@ -87,7 +99,7 @@ def speak(bot, trigger):
         if ctime - jtime <= timeout:
             logger.info('Greeting ' + trigger.nick)
 
-            greet(bot, trigger)
+            send_greeting(bot, trigger.nick)
 
         logger.info('Removing entry for ' + trigger.nick)
 
