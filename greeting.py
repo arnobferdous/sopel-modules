@@ -1,5 +1,5 @@
 from sopel.config.types import StaticSection, ValidatedAttribute, ListAttribute    
-from sopel.module import rule, event, interval
+from sopel.module import rule, event, interval, commands
 from sopel.tools import SopelMemory
 from sopel.logger import get_logger
 import time
@@ -29,9 +29,19 @@ def setup(bot):
     whitelist = bot.config.greeting.whitelist
     logger    = get_logger(__name__)
 
-
     if 'greeting' not in bot.memory:
         bot.memory['greeting'] = SopelMemory()
+
+
+@commands('greet')
+def greet(bot, trigger):
+    global greeting
+
+    if trigger.match.group(3) is not None:
+        nick = trigger.match.group(3)
+        bot.say(nick + ': ' + greeting)
+    else:
+        bot.say(greeting)
 
 
 @event('JOIN')
@@ -77,7 +87,7 @@ def speak(bot, trigger):
         if ctime - jtime <= timeout:
             logger.info('Greeting ' + trigger.nick)
 
-            bot.say(greeting)
+            greet(bot, trigger)
 
         logger.info('Removing entry for ' + trigger.nick)
 
