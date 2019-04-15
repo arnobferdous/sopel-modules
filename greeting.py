@@ -20,20 +20,18 @@ def configure(config):
 
 
 def setup(bot):
-    global timeout, greeting, whitelist, logger
+    global logger
 
     bot.config.define_section('greeting', GreetingSection)
 
-    timeout   = bot.config.greeting.timeout
-    greeting  = bot.config.greeting.greeting
-    whitelist = bot.config.greeting.whitelist
-    logger    = get_logger(__name__)
+    logger = get_logger(__name__)
 
     if 'greeting' not in bot.memory:
         bot.memory['greeting'] = SopelMemory()
 
 
 def send_greeting(bot, nick=None):
+    greeting = bot.config.greeting.greeting
     target = ''
 
     if nick:
@@ -44,6 +42,8 @@ def send_greeting(bot, nick=None):
 
 @commands('greet')
 def greet(bot, trigger):
+    whitelist = bot.config.greeting.whitelist
+
     if trigger.sender not in whitelist:
         logger.info('Ignoring channel ' + trigger.sender)
         return
@@ -58,6 +58,8 @@ def greet(bot, trigger):
 @event('JOIN')
 @rule('.*')
 def joined(bot, trigger):
+    whitelist = bot.config.greeting.whitelist
+
     logger.info(trigger.nick + ' joined')
 
     if trigger.sender not in whitelist:
@@ -77,6 +79,9 @@ def joined(bot, trigger):
 
 @rule('.*')
 def speak(bot, trigger):
+    whitelist = bot.config.greeting.whitelist
+    timeout = bot.config.greeting.timeout
+
     if trigger.sender not in whitelist:
         logger.info('Ignoring channel ' + trigger.sender)
         return
@@ -118,6 +123,7 @@ def cleanup_events(bot, trigger):
 @interval(90)
 def cleanup_interval(bot):
     ctime = time.time()
+    timeout = bot.config.greeting.timeout
 
     logger.info('Cleanup time')
 

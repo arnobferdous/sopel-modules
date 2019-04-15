@@ -17,18 +17,16 @@ def configure(config):
 
 
 def setup(bot):
-    global blacklist, service_translations, url, user_agent
+    global service_translations
 
     bot.config.define_section('steamstatus', SteamStatusSection)
 
-    blacklist            = bot.config.steamstatus.blacklist
-    url                  = bot.config.steamstatus.url
-    user_agent           = bot.config.steamstatus.user_agent
     service_translations = json.load(open(os.path.dirname(os.path.realpath(__file__)) + '/data/steamstatus'))
 
 
 @commands("steam")
 def status(bot, trigger):
+    blacklist = bot.config.steamstatus.blacklist
     json = get_info()
     result = []
 
@@ -53,6 +51,9 @@ def status(bot, trigger):
 
 
 def get_info():
+    url                  = bot.config.steamstatus.url
+    user_agent           = bot.config.steamstatus.user_agent
+
     response = requests.get(url, headers={'user-agent': user_agent})
 
     return response.json()
