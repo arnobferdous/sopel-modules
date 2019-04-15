@@ -14,4 +14,4 @@ A *very* simple FAQ module
 
 
 ## admin_mod.py ##
-So far, this module simply serves to add a `say` alias to the `msg` command from the `admin` module. All commands from `admin` are loaded through here, so do not load the `admin` module as well.
+So far, this module simply serves to add a `say` alias to the `msg` command from the `admin` module. All commands from `admin` are loaded through here, so do not load it as well. (*If we don't `import *` from the `admin` module, commands that are modified in this module will be executed twice.*)
