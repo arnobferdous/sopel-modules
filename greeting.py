@@ -33,6 +33,15 @@ def setup(bot):
         bot.memory['greeting'] = SopelMemory()
 
 
+def send_greeting(bot, nick=None):
+    global greeting
+
+    if nick is not None:
+        target = nick + ': '
+
+    bot.say(target + greeting)
+
+
 @commands('greet')
 def greet(bot, trigger):
     global whitelist
@@ -45,15 +54,6 @@ def greet(bot, trigger):
         nick = trigger.match.group(3)
 
     send_greeting(bot, nick)
-
-
-def send_greeting(bot, target=None):
-    global greeting
-
-    if target is not None:
-        nick = target + ': '
-
-    bot.say(nick + greeting)
 
 
 @event('JOIN')
