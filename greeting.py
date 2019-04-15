@@ -34,7 +34,9 @@ def setup(bot):
 
 
 def send_greeting(bot, nick=None):
-    if nick is not None:
+    target = ''
+
+    if nick:
         target = nick + ': '
 
     bot.say(target + greeting)
@@ -46,6 +48,7 @@ def greet(bot, trigger):
         logger.info('Ignoring channel ' + trigger.sender)
         return
 
+    nick = None
     if trigger.match.group(3) is not None:
         nick = trigger.match.group(3)
 
