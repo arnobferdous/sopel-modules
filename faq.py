@@ -18,7 +18,7 @@ def setup(bot):
 
     bot.config.define_section('faq', FaqSection)
 
-    path = bot.config.faq.path
+    path    = bot.config.faq.path
 
     answers = json.load(open(path))
 

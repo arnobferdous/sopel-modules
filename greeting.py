@@ -32,7 +32,7 @@ def setup(bot):
 
 def send_greeting(bot, nick=None):
     greeting = bot.config.greeting.greeting
-    target = ''
+    target   = ''
 
     if nick:
         target = nick + ': '
@@ -80,7 +80,7 @@ def joined(bot, trigger):
 @rule('.*')
 def speak(bot, trigger):
     whitelist = bot.config.greeting.whitelist
-    timeout = bot.config.greeting.timeout
+    timeout   = bot.config.greeting.timeout
 
     if trigger.sender not in whitelist:
         logger.info('Ignoring channel ' + trigger.sender)
@@ -122,7 +122,7 @@ def cleanup_events(bot, trigger):
 
 @interval(90)
 def cleanup_interval(bot):
-    ctime = time.time()
+    ctime   = time.time()
     timeout = bot.config.greeting.timeout
 
     logger.info('Cleanup time')

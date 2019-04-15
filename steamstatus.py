@@ -51,8 +51,8 @@ def status(bot, trigger):
 
 
 def get_info():
-    url                  = bot.config.steamstatus.url
-    user_agent           = bot.config.steamstatus.user_agent
+    url        = bot.config.steamstatus.url
+    user_agent = bot.config.steamstatus.user_agent
 
     response = requests.get(url, headers={'user-agent': user_agent})
 
