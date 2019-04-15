@@ -13,7 +13,7 @@ This module retrieves steamstat.us info and [presents it nicely](https://imgur.c
 A *very* simple FAQ module 
 
 TODO
-Per [708b4c5](https://github.com/squigglezworth/sopel-modules/commit/708b4c5cbc15fb2f9caec23e99ccc12b976d5c6e), determine another way of loading the questions/answers while still allowing the admin to update the data
+* Per [708b4c5](https://github.com/squigglezworth/sopel-modules/commit/708b4c5cbc15fb2f9caec23e99ccc12b976d5c6e), determine another way of loading the questions/answers while still allowing the admin to update the data
 
 ## admin_mod.py ##
 So far, this module simply serves to add a `say` alias to the `msg` command from the `admin` module. All commands from `admin` are loaded through here, so do not load it as well. 
