@@ -34,8 +34,6 @@ def setup(bot):
 
 
 def send_greeting(bot, nick=None):
-    global greeting
-
     if nick is not None:
         target = nick + ': '
 
@@ -44,8 +42,6 @@ def send_greeting(bot, nick=None):
 
 @commands('greet')
 def greet(bot, trigger):
-    global whitelist
-
     if trigger.sender not in whitelist:
         logger.info('Ignoring channel ' + trigger.sender)
         return
@@ -59,8 +55,6 @@ def greet(bot, trigger):
 @event('JOIN')
 @rule('.*')
 def joined(bot, trigger):
-    global whitelist
-
     logger.info(trigger.nick + ' joined')
 
     if trigger.sender not in whitelist:
@@ -80,8 +74,6 @@ def joined(bot, trigger):
 
 @rule('.*')
 def speak(bot, trigger):
-    global timeout, greeting, whitelist
-
     if trigger.sender not in whitelist:
         logger.info('Ignoring channel ' + trigger.sender)
         return
@@ -122,7 +114,6 @@ def cleanup_events(bot, trigger):
 
 @interval(90)
 def cleanup_interval(bot):
-    global timeout
     ctime = time.time()
 
     logger.info('Cleanup time')

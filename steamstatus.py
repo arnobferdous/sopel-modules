@@ -26,8 +26,6 @@ def setup(bot):
 
 @commands("steam")
 def status(bot, trigger):
-    global blacklist, service_translations
-
     json = get_info()
     result = []
     services = {}
