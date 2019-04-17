@@ -25,3 +25,4 @@ So far, this module simply serves to add a `say` alias to the `msg` command from
 TODO 
 
 * Find cleaner way of importing from `admin`
+* Allow calling commands without PRIVMSG
