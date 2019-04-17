@@ -4,7 +4,7 @@
 * [faq.py](#faq)
 * [admin_mod.py](#admin_mod)
 ## Other 
-** [Ideas for stuff to write](#deas)
+* [Ideas for stuff to write](#ideas)
 
 ### greeting
 This module greets users with a preset message when they speak within X seconds of joining a channel in the whitelist, or when someone uses the `greet` command
