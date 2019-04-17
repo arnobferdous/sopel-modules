@@ -1,4 +1,4 @@
-## Scripts
+## Modules
 * [greeting.py](#greeting)
 * [steamstatus.py](#steamstatus)
 * [faq.py](#faq)
