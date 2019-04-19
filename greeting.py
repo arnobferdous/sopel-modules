@@ -92,10 +92,6 @@ def speak(bot, trigger):
     ctime = time.time()
     uid = bot.db.get_nick_id(trigger.nick, create=True)
 
-    logger.info('Updating last-message time for ' + trigger.nick)
-
-    bot.db.set_nick_value(trigger.nick, 'last-message', ctime)
-
     logger.info('Checking message from ' + trigger.nick)
 
     if uid in bot.memory['greeting']:
@@ -104,8 +100,8 @@ def speak(bot, trigger):
         jtime = bot.memory['greeting'][uid]
         last = bot.db.get_nick_value(trigger.nick, 'last-message')
 
-        if ctime - last <= speak_timeout:
-            logger.info('Ignoring message from user ' + trigger.nick)
+        if last is not None and ctime - last <= speak_timeout:
+            logger.info(trigger.nick + ' spoke recently, ignoring')
             return
 
         if ctime - jtime <= join_timeout:
@@ -116,6 +112,9 @@ def speak(bot, trigger):
         logger.info('Removing entry for ' + trigger.nick)
 
         del bot.memory['greeting'][uid]
+
+    logger.info('Updating last-message time for ' + trigger.nick)
+    bot.db.set_nick_value(trigger.nick, 'last-message', ctime)
 
 
 @event('PART')
