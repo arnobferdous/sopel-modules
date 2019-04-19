@@ -11,7 +11,7 @@ This module greets users with a preset message when they speak within X seconds 
 
 TODO
 * Fix nick tracking (joining, changing nick, then speaking within timeout does not trigger greeting)
-* Modify so that greetings aren't sent to users who have also talked within a specified amount of time (speaking, rejoining, and speaking again prompts an unnecessary greeting)
+
 
 #
 ### steamstatus
