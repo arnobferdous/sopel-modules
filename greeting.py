@@ -6,15 +6,17 @@ import time
 
 
 class GreetingSection(StaticSection):
-    timeout   = ValidatedAttribute('timeout', int)
-    greeting  = ValidatedAttribute('greeting')
-    whitelist = ListAttribute('whitelist')
+    join_timeout  = ValidatedAttribute('join_timeout', int)
+    speak_timeout = ValidatedAttribute('speak_timeout', int)
+    greeting      = ValidatedAttribute('greeting')
+    whitelist     = ListAttribute('whitelist')
 
 
 def configure(config):
     config.define_section('greeting', GreetingSection, validate=False)
 
-    config.greeting.configure_setting('timeout', 'How long after a user joins to listen and respond with the greeting (in seconds)')
+    config.greeting.configure_setting('join_timeout', 'How long after a user joins to listen and respond with the greeting (in seconds)')
+    config.greeting.configure_setting('speak_timeout', 'How long to wait after a user last speaks to be able to greet them')
     config.greeting.configure_setting('greeting', 'Greeting to use')
     config.greeting.configure_setting('whitelist', 'List of channels to greet in')
 
@@ -80,7 +82,8 @@ def joined(bot, trigger):
 @rule('.*')
 def speak(bot, trigger):
     whitelist = bot.config.greeting.whitelist
-    timeout   = bot.config.greeting.timeout
+    join_timeout   = bot.config.greeting.join_timeout
+    speak_timeout  = bot.config.greeting.speak_timeout
 
     if trigger.sender not in whitelist:
         logger.info('Ignoring channel ' + trigger.sender)
@@ -89,14 +92,23 @@ def speak(bot, trigger):
     ctime = time.time()
     uid = bot.db.get_nick_id(trigger.nick, create=True)
 
+    logger.info('Updating last-message time for ' + trigger.nick)
+
+    bot.db.set_nick_value(trigger.nick, 'last-message', ctime)
+
     logger.info('Checking message from ' + trigger.nick)
 
     if uid in bot.memory['greeting']:
         logger.info('Entry found, checking ' + trigger.nick)
 
         jtime = bot.memory['greeting'][uid]
+        last = bot.db.get_nick_value(trigger.nick, 'last-message')
 
-        if ctime - jtime <= timeout:
+        if ctime - last <= speak_timeout:
+            logger.info('Ignoring message from user ' + trigger.nick)
+            return
+
+        if ctime - jtime <= join_timeout:
             logger.info('Greeting ' + trigger.nick)
 
             send_greeting(bot, trigger.nick)
@@ -123,12 +135,12 @@ def cleanup_events(bot, trigger):
 @interval(90)
 def cleanup_interval(bot):
     ctime   = time.time()
-    timeout = bot.config.greeting.timeout
+    join_timeout = bot.config.greeting.join_timeout
 
     logger.info('Cleanup time')
 
     for key, val in bot.memory['greeting'].items():
-        if ctime - val > timeout:
+        if ctime - val > join_timeout:
             logger.info('Removing entry for ' + str(key))
 
             del bot.memory['greeting'][key]
