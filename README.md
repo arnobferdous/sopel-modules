@@ -13,19 +13,21 @@ TODO
 * Fix nick tracking (joining, changing nick, then speaking within timeout does not trigger greeting)
 * Modify so that greetings aren't sent to users who have also talked within a specified amount of time (speaking, rejoining, and speaking again prompts an unnecessary greeting)
 
-
+#
 ### steamstatus
 This module retrieves steamstat.us info and [presents it nicely](https://imgur.com/a/TKnsRLM)
 
 TODO
 * Add cache, with configurable TTL
 
+#
 ### faq
 A *very* simple FAQ module 
 
 TODO
 * Per [708b4c5](https://github.com/squigglezworth/sopel-modules/commit/708b4c5cbc15fb2f9caec23e99ccc12b976d5c6e), determine another way of loading the questions/answers while still allowing the admin to update the data
 
+#
 ### admin_mod
 So far, this module simply serves to add a `say` alias to the `msg` command from the `admin` module. All commands from `admin` are loaded through here, so do not load it as well. 
 
