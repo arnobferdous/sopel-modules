@@ -27,7 +27,7 @@ def setup(bot):
 @commands("steam")
 def status(bot, trigger):
     blacklist = bot.config.steamstatus.blacklist
-    json = get_info()
+    json = get_info(bot)
     result = []
 
     for name, details in json['services'].items():
@@ -50,7 +50,7 @@ def status(bot, trigger):
     	bot.say(line)
 
 
-def get_info():
+def get_info(bot):
     url        = bot.config.steamstatus.url
     user_agent = bot.config.steamstatus.user_agent
 
